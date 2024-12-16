@@ -1,0 +1,70 @@
+version: '1.0'
+services:
+  elasticsearch:
+    container_name: elasticsearch
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.11.3
+    environment:
+      - ELASTIC_USERNAME=elastic
+      - ELASTIC_PASSWORD=elastic
+    mem_limit: 1g
+    networks:
+      - elastic
+    ports:
+      - 9200:9200
+  kibana:
+    container_name: kibana
+    image: docker.elastic.co/kibana/kibana:8.11.3
+    mem_limit: 1g
+    depends_on:
+      - elasticsearch
+    networks:
+      - elastic
+    ports:
+      - 5601:5601
+  filebeat:
+    container_name: filebeat
+    image: docker.elastic.co/beats/filebeat:8.11.3
+    mem_limit: 1g
+    depends_on:
+      - elasticsearch
+    hostname: "{{.Node.Hostname}}-filebeat"
+    user: root
+    networks:
+      - elastic
+    configs:
+      - source: fb_config
+        target: /usr/share/filebeat/filebeat.yml
+    volumes:
+      - filebeat:/usr/share/filebeat/data
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/lib/docker/containers/:/var/lib/docker/containers/:ro
+      # TODO: Replace `/logs-path` with your logs path
+      - /Users/amankumar/novo/logs:/tmp/logs:ro 
+    command: ["--strict.perms=false"]
+  apm:
+    container_name: apm
+    image: docker.elastic.co/apm/apm-server:8.11.3
+    mem_limit: 1g
+    depends_on:
+      - elasticsearch
+    networks:
+      - elastic
+    configs:
+      - source: apm_config
+        target: /usr/share/apm-server/apm-server.yml
+    volumes:
+      - /var/lib/docker/containers/:/var/lib/docker/containers/:ro
+    ports:
+      - 8200:8200
+    command: ["--strict.perms=false"]
+networks:
+  elastic:
+    name: elastic
+    external: true
+volumes:
+  filebeat:
+configs:
+  fb_config:
+    file: $PWD/filebeat.yml
+  apm_config:
+    file: $PWD/apm-server.yml

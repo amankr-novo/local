@@ -1,0 +1,10 @@
+apm-server:
+  host: "0.0.0.0:8200"
+
+output.elasticsearch:
+  hosts: ["elasticsearch:9200"]
+  enabled: true
+  protocol: "https"
+  ssl.verification_mode: none
+  username: "elastic"
+  password: "elastic"
