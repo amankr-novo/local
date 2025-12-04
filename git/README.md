@@ -37,7 +37,7 @@ node delete-branches.js <owner> <repo> <keyword> [--dry-run] [--token <token>]
 - `<repo>` - Repository name (e.g., `novo-mobile-api`)
 - `<keyword>` - Keyword to search for in branch names (case-sensitive substring match)
 - `--dry-run` - (Optional) Preview mode - shows what would be deleted without actually deleting
-- `--token <token>` - (Optional) GitHub token (if not using environment variable)
+- `--token <token>` - (Optional) GitHub token
 
 ### Examples
 
@@ -46,9 +46,6 @@ node delete-branches.js <owner> <repo> <keyword> [--dry-run] [--token <token>]
 Always run with `--dry-run` first to see what will be deleted:
 
 ```bash
-# Using environment variable
-node delete-branches.js novohq novo-mobile-api card --dry-run
-
 # Using token flag
 node delete-branches.js novohq novo-mobile-api card --token your_token_here --dry-run
 ```
@@ -58,9 +55,6 @@ node delete-branches.js novohq novo-mobile-api card --token your_token_here --dr
 After reviewing the dry-run output, remove `--dry-run` to actually delete:
 
 ```bash
-# Using environment variable
-node delete-branches.js novohq novo-mobile-api card
-
 # Using token flag
 node delete-branches.js novohq novo-mobile-api card --token your_token_here
 ```
@@ -134,9 +128,9 @@ Found 3 matching branch(es):
 
 ## Troubleshooting
 
-### Error: "GITHUB_TOKEN environment variable or --token flag is required"
+### Error: "GITHUB_TOKEN --token flag is required"
 
-**Solution**: Set the token as an environment variable or pass it via `--token` flag:
+**Solution**: Pass it via `--token` flag:
 ```bash
 export GITHUB_TOKEN=your_token_here
 # or
@@ -176,7 +170,7 @@ node delete-branches.js <owner> <repo> <keyword> --token your_token_here
 
 ## Security
 
-⚠️ **Important**: Never commit your GitHub token to version control. Always use environment variables or pass it as a command-line argument.
+⚠️ **Important**: Never commit your GitHub token to version control. Always pass it as a command-line argument.
 
 ## License
 
